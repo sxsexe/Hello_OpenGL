@@ -20,7 +20,6 @@ public:
     virtual void OnExit() { InUse = false; };
     inline bool CanDraw() const { return InUse; }
 
-
 private:
 
     bool InUse = false;

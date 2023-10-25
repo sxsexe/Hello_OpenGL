@@ -316,7 +316,7 @@ enum aiTextureType
  *  not distinguish between "specular" and "diffuse" shaders (thus the
  *  specular term for diffuse shading models like Oren-Nayar remains
  *  undefined). <br>
- *  Again, this value is just a hint. Assimp tries to select the shader whose
+ *  Again, this value is just a hint. Assimp tries to select the glsl whose
  *  most common implementation matches the original rendering results of the
  *  3D modeller which wrote a particular model as closely as possible.
  */
@@ -341,7 +341,7 @@ enum aiShadingMode
 
     /** Toon-Shading per pixel
      *
-	 *  Also known as 'comic' shader.
+	 *  Also known as 'comic' glsl.
      */
     aiShadingMode_Toon = 0x5,
 
@@ -361,7 +361,7 @@ enum aiShadingMode
 
     /** CookTorrance-Shading per pixel
 	 *
-	 *  Special shader for metallic surfaces.
+	 *  Special glsl for metallic surfaces.
      */
     aiShadingMode_CookTorrance = 0x8,
 
