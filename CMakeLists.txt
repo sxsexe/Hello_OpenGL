@@ -28,6 +28,6 @@ target_link_libraries(OpenGLStudy opengl32.lib glfw3.lib glew32s.lib assimp.lib)
 #        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/glsl/* ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 #)
 
-set(glsl_dir ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/glsl)
-execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${glsl_dir})
-execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory -f ${PROJECT_SOURCE_DIR}/glsl ${glsl_dir})
+#set(glsl_dir ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/glsl)
+#execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory ${glsl_dir})
+#execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory -f ${PROJECT_SOURCE_DIR}/glsl ${glsl_dir})

@@ -20,6 +20,10 @@ public:
     SceneTriangle() {
         std::cout << "Create SceneTriangle"<< std::endl;
 
+        mShader = new ShaderProxy("E:\\OpenGLWorld\\Projects\\OpenGLStudy\\glsl\\scene_triangle.vert", "E:\\OpenGLWorld\\Projects\\OpenGLStudy\\glsl\\scene_triangle.frag");
+        mCamera = new Camera();
+        mView = mCamera->getCameraMatrix();
+
         float size = 0.8f;
         mVertexVector.push_back({glm::vec4(-size, -size, +size, 1.0f), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)}); // left bottom
         mVertexVector.push_back({glm::vec4(+size, -size, +size, 1.0f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)}); // right bottom
@@ -67,9 +71,6 @@ public:
         int iVertexSize = sizeof(Vertex);
         memcpy(mVertexData, &mVertexVector[0], mVertexVector.size() * iVertexSize);
 
-        mShader = new ShaderProxy("E:\\OpenGLWorld\\Projects\\OpenGLStudy\\glsl\\scene_triangle.vert", "E:\\OpenGLWorld\\Projects\\OpenGLStudy\\glsl\\scene_triangle.frag");
-        mCamera = new Camera();
-
     }
     SceneTriangle (const SceneTriangle& rhs) = delete;
     SceneTriangle& operator=(const SceneTriangle& rhs) = delete;
@@ -94,20 +95,39 @@ public:
 
     void Draw(double delta) override {
 
-        GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
+        GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT))
+        GLCall(glEnable(GL_MULTISAMPLE));
 
-        mView = mCamera->getCameraMatrix();
-        mMVP = mProj * mView * mModel;
         mShader->Bind();
+        mMVP = mProj * mView * mModel;
         mShader->setUniformMat4f("u_MVP", mMVP);
-
 
         mVA->Bind();
         mIB->Bind();
         mVB->Bind();
-
         mVB->UpdateSubData(mVertexData, mVertexVector.size() * sizeof(Vertex));
+
         GLCall(glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr));
+
+    }
+
+    void OnMouseDrag(MouseDragDirection directionX, MouseDragDirection directionY) override {
+        auto angle = 2.0f;
+        if(directionX == MouseDragDirection::DIR_LEFT) {
+            mModel =  glm::rotate(mModel, glm::radians(angle), glm::vec3(0.0, 1.0, 0.0));
+            if(directionY == DIR_UP) {
+                mModel =  glm::rotate(mModel, glm::radians(angle), glm::vec3(1.0, 0.0, 0.0));
+            } else if(directionY == DIR_DOWN) {
+                mModel =  glm::rotate(mModel, glm::radians(-angle), glm::vec3(1.0, 0.0, 0.0));
+            }
+        } else if(directionX == MouseDragDirection::DIR_RIGHT) {
+            mModel =  glm::rotate(mModel, glm::radians(-angle), glm::vec3(0.0, 1.0, 0.0));
+            if(directionY == DIR_UP) {
+                mModel =  glm::rotate(mModel, glm::radians(angle), glm::vec3(1.0, 0.0, 0.0));
+            } else if(directionY == DIR_DOWN) {
+                mModel =  glm::rotate(mModel, glm::radians(-angle), glm::vec3(1.0, 0.0, 0.0));
+            }
+        }
     }
 
 private:
@@ -120,7 +140,7 @@ private:
     VertexBuffer *mVB;
     IndexBuffer *mIB;
 
-    glm::mat4 mProj = glm::mat4(1.0f);
+    glm::mat4 mProj = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH/(float)WINDOW_HEIGHT, 0.1f, 100.0f);
     glm::mat4 mView;
     glm::mat4 mModel = glm::mat4(1.0f);
     glm::mat4 mMVP = glm::mat4(1.0f);

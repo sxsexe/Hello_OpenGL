@@ -11,23 +11,26 @@
 class Camera {
 
 private:
-    glm::vec3 m_Trans = {0.0f, 0.0f, 10.0f};
-    glm::vec3 m_Up = {0.0f, 1.0f, 0.0f};
+    glm::vec3 mTrans = {0.0f, 0.0f, 5.0f};
+    glm::vec3 mUp = {0.0f, 1.0f, 0.0f};
+    glm::mat4 mViewMatrix;
 
 public:
 
-    Camera() = default;
+    Camera() {
+        mViewMatrix = glm::lookAt(mTrans,                                   // 相机位置
+                                  glm::vec3(0.0f, 0.0f, 0.0f),              // 相机target
+                                  mUp);                                     //up分量
+    };
 
-    ~Camera() {}
+    ~Camera() = default;
 
-    glm::mat4 getCameraMatrix() {
-        return glm::lookAt(m_Trans,           // 相机位置
-                           glm::vec3(0.0f, 0.0f, 0.0f),            // 相机target
-                           m_Up);           //up分量
+    glm::mat4 getCameraMatrix() const {
+        return mViewMatrix;
     }
 
     glm::vec3 getCameraPos() {
-        return m_Trans;
+        return mTrans;
     }
 
 };

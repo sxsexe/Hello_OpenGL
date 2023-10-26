@@ -5,37 +5,57 @@
 #include "src/scene/SceneTriangle.h"
 #include <iostream>
 
-BaseScene* mCurrentScene = nullptr;
 
+BaseScene* mCurrentScene = nullptr;
 void changeScene(BaseScene* newScene) {
     if(mCurrentScene) {
         mCurrentScene ->OnExit();
     }
 
+    newScene->OnEnter();
+
     BaseScene* ptr = mCurrentScene;
     mCurrentScene = newScene;
-    mCurrentScene->OnEnter();
-
     delete ptr;
 }
 
-void buildSubEntries() {
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
+double previous_x = 0.0f;
+double previous_y = 0.0f;
 
-    ImGui::Begin("OpenGL SubEntries");
+void mouse_cursor_callback(GLFWwindow* window, double xpos, double ypos) {
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
+    {
+        return;
+    }
+    double x;
+    double y;
+    glfwGetCursorPos(window, &x, &y);
+//    std::cout << "left drag x = " << x << ", y = " << y << std::endl;
+    if(mCurrentScene && mCurrentScene->CanDraw()) {
+        MouseDragDirection dirX = DIR_NONE;
+        if(previous_x - x > 0) {
+            dirX = DIR_RIGHT;
+        } else {
+            dirX = DIR_LEFT;
+        }
+        previous_x = x;
+        MouseDragDirection dirY = DIR_NONE;
+        if(previous_y - y > 0) {
+            dirY = DIR_DOWN;
+        } else {
+            dirY = DIR_UP;
+        }
+        previous_y = y;
 
+        mCurrentScene->OnMouseDrag(dirX, dirY);
+    }
+}
+
+void addButton1() {
     if (ImGui::Button("Triangle")) {
         BaseScene * scene = new SceneTriangle();
         changeScene(scene);
     }
-
-    ImGui::End();
-
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
 }
 
 
@@ -73,6 +93,8 @@ int main() {
     // 设置刷新频率
     glfwSwapInterval(1);
 
+    glfwSetCursorPosCallback(window, mouse_cursor_callback);
+
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -93,14 +115,26 @@ int main() {
         GLCall(glClearColor(0.2f, 0.2f, 0.4f, 1.0f));
         GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
-        buildSubEntries();
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        ImGui::Begin("OpenGL SubEntries");
+
+        addButton1();
 
         double deltaTime = glfwGetTime() - currentTime;
         currentTime = glfwGetTime();
-
         if(mCurrentScene && mCurrentScene->CanDraw()) {
             mCurrentScene->Draw(deltaTime);
         }
+
+        ImGui::End();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 
         glfwSwapBuffers(window);
         glfwPollEvents();

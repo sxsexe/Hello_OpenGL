@@ -20,6 +20,7 @@ public:
     virtual void OnExit() { InUse = false; };
     inline bool CanDraw() const { return InUse; }
 
+    virtual void OnMouseDrag(MouseDragDirection direction, MouseDragDirection direction1){}
 private:
 
     bool InUse = false;

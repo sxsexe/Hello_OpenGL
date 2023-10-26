@@ -76,5 +76,8 @@ struct Vertex {
 
 };
 
+enum MouseDragDirection {
+    DIR_NONE, DIR_UP=1, DIR_DOWN, DIR_LEFT, DIR_RIGHT
+};
 
 #endif //OPENGLSTUDY_COMMON_H
