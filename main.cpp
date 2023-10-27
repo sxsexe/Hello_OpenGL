@@ -3,6 +3,7 @@
 #include "common.h"
 #include "src/scene/BaseScene.h"
 #include "src/scene/SceneTriangle.h"
+#include "src/scene/GeometryScene.h"
 #include <iostream>
 
 
@@ -18,6 +19,46 @@ void changeScene(BaseScene* newScene) {
     mCurrentScene = newScene;
     delete ptr;
 }
+
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+    if(mCurrentScene && mCurrentScene->CanDraw()) {
+        mCurrentScene->OnScroll(xoffset, yoffset);
+        if(yoffset > 0) {
+
+        } else if(yoffset < 0) {
+
+        }
+    }
+}
+
+void key_callback(GLFWwindow * win, int key, int code, int action, int mode){
+    printf("key:%d, code:%d, action:%d, mods:%d\n", key, code, action, mode);
+
+    if(key == GLFW_KEY_LEFT && action == GLFW_PRESS) {
+        if(mCurrentScene && mCurrentScene->CanDraw()) {
+            mCurrentScene->OnKey(DIR_LEFT, DIR_NONE);
+        }
+    }
+    if(key == GLFW_KEY_RIGHT && action == GLFW_PRESS) {
+        if(mCurrentScene && mCurrentScene->CanDraw()) {
+            mCurrentScene->OnKey(DIR_RIGHT, DIR_NONE);
+        }
+    }
+    if(key == GLFW_KEY_UP && action == GLFW_PRESS) {
+        if(mCurrentScene && mCurrentScene->CanDraw()) {
+            mCurrentScene->OnKey(DIR_NONE, DIR_UP);
+        }
+    }
+    if(key == GLFW_KEY_DOWN && action == GLFW_PRESS) {
+        if(mCurrentScene && mCurrentScene->CanDraw()) {
+            mCurrentScene->OnKey(DIR_NONE, DIR_DOWN);
+        }
+    }
+
+}
+
+
 
 double previous_x = 0.0f;
 double previous_y = 0.0f;
@@ -57,7 +98,12 @@ void addButton1() {
         changeScene(scene);
     }
 }
-
+void addButton2() {
+    if (ImGui::Button("Geometry")) {
+        BaseScene * scene = new GeometryScene();
+        changeScene(scene);
+    }
+}
 
 int main() {
 
@@ -94,6 +140,8 @@ int main() {
     glfwSwapInterval(1);
 
     glfwSetCursorPosCallback(window, mouse_cursor_callback);
+    glfwSetKeyCallback(window, key_callback);
+    glfwSetScrollCallback(window, scroll_callback);
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -112,10 +160,6 @@ int main() {
     double currentTime = glfwGetTime();
     while (!glfwWindowShouldClose(window)) {
 
-        GLCall(glClearColor(0.2f, 0.2f, 0.4f, 1.0f));
-        GLCall(glClear(GL_COLOR_BUFFER_BIT));
-
-
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
@@ -123,6 +167,7 @@ int main() {
         ImGui::Begin("OpenGL SubEntries");
 
         addButton1();
+        addButton2();
 
         double deltaTime = glfwGetTime() - currentTime;
         currentTime = glfwGetTime();

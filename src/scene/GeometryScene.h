@@ -1,36 +1,32 @@
 //
-// Created by xiaodong.lxd on 2023/10/25.
+// Created by xiaodong.lxd on 2023/10/26.
 //
 
-#ifndef OPENGLSTUDY_SCENETRIANGLE_H
-#define OPENGLSTUDY_SCENETRIANGLE_H
-
+#ifndef OPENGLSTUDY_GEOMETRYSCENE_H
+#define OPENGLSTUDY_GEOMETRYSCENE_H
 
 #include "BaseScene.h"
-#include "../shapes/BaseShape.h"
-#include "../shapes/ShapeTriangle.h"
+#include "src/shapes/ShapeCylinder.h"
 
+class GeometryScene : public BaseScene {
 
-#include <vector>
-
-class SceneTriangle : public BaseScene {
 
 public:
-    SceneTriangle() : mShape(nullptr) {
-        std::cout << "Create SceneTriangle"<< std::endl;
+    GeometryScene (const GeometryScene& rhs) = delete;
+    GeometryScene& operator=(const GeometryScene& rhs) = delete;
+
+    GeometryScene() : mShape(nullptr) {
+        std::cout << "Create GeometryScene"<< std::endl;
 
         mShader = new ShaderProxy("E:\\OpenGLWorld\\Projects\\OpenGLStudy\\glsl\\baseshape.vert", "E:\\OpenGLWorld\\Projects\\OpenGLStudy\\glsl\\baseshape.frag");
         mCamera = new Camera();
 
-        mShape = new ShapeTriangle();
-
+        mShape = new ShapeCylinder();
     }
-    SceneTriangle (const SceneTriangle& rhs) = delete;
-    SceneTriangle& operator=(const SceneTriangle& rhs) = delete;
 
-    ~SceneTriangle() override {
+    ~GeometryScene() override{
         DELETE_PTR(mShape);
-        std::cout << "Delete SceneTriangle"<< std::endl;
+        std::cout << "Delete GeometryScene"<< std::endl;
     }
 
     void OnEnter() override {
@@ -43,7 +39,7 @@ public:
 
     void Draw(double delta) override {
 
-        GLCall(glClearColor(0.2f, 0.2f, 0.4f, 1.0f));
+        GLCall(glClearColor(0.5f, 0.5f, 0.5f, 1.0f));
         GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
         GLCall(glEnable(GL_DEPTH_TEST));
 
@@ -63,5 +59,4 @@ private:
 
 };
 
-
-#endif //OPENGLSTUDY_SCENETRIANGLE_H
+#endif //OPENGLSTUDY_GEOMETRYSCENE_H
