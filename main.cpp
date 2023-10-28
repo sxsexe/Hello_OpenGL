@@ -55,14 +55,11 @@ void key_callback(GLFWwindow * win, int key, int code, int action, int mode){
             mCurrentScene->OnKey(DIR_NONE, DIR_DOWN);
         }
     }
-
 }
-
 
 
 double previous_x = 0.0f;
 double previous_y = 0.0f;
-
 void mouse_cursor_callback(GLFWwindow* window, double xpos, double ypos) {
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
     {

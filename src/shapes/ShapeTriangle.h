@@ -13,6 +13,9 @@ public:
 
     ShapeTriangle() {
         std::cout << "Create ShapeTriangle" << std::endl;
+
+        mType = S_Triangle;
+
         float size = 0.8f;
         mVertexVector.push_back({glm::vec4(-size, -size, +size, 1.0f), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)}); // left bottom
         mVertexVector.push_back({glm::vec4(+size, -size, +size, 1.0f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)}); // right bottom
@@ -44,21 +47,16 @@ public:
         mIndexData[i++] = 1;
         mIndexData[i++] = 2;
 
+        mVB = new VertexBuffer(nullptr, mVertexVector.size() * sizeof(Vertex), true);
+        mIB = new IndexBuffer(mIndexData, indexCount);
 
         mVA = new VertexArray();
         mVA->Bind();
         VertexBufferLayout layout;
-        layout.push<float>(Vertex::getPosSize());
-        layout.push<float>(Vertex::getColorSize());
-        layout.push<float>(Vertex::getTextCordSize());
-        layout.push<float>(Vertex::getNormalSize());
-
-        mVB = new VertexBuffer(nullptr, mVertexVector.size() * sizeof(Vertex), true);
-        mIB = new IndexBuffer(mIndexData, indexCount);
+        VertexBufferLayout::makeDefaultLayout(layout);
         mVA->AddVertexBuffer(*mVB, layout);
 
-        int iVertexSize = sizeof(Vertex);
-        memcpy(mVertexData, &mVertexVector[0], mVertexVector.size() * iVertexSize);
+        memcpy(mVertexData, &mVertexVector[0], mVertexVector.size() * sizeof(Vertex));
     }
 
     void Draw(double delta) override {

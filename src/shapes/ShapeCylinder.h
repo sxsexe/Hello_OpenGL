@@ -11,7 +11,8 @@ class ShapeCylinder  : public BaseShape {
 
 public:
     ShapeCylinder() {
-        std::cout << "Create ShapeTriangle" << std::endl;
+        std::cout << "Create ShapeCylinder" << std::endl;
+        mType = S_Cylinder;
 
         std::vector<Vertex> vertexTop;
         std::vector<Vertex> vertexBottom;
@@ -123,16 +124,13 @@ public:
         mVA = new VertexArray();
         mVA->Bind();
         VertexBufferLayout layout;
-        layout.push<float>(Vertex::getPosSize());
-        layout.push<float>(Vertex::getColorSize());
-        layout.push<float>(Vertex::getTextCordSize());
-        layout.push<float>(Vertex::getNormalSize());
+        VertexBufferLayout::makeDefaultLayout(layout);
         mVA->AddVertexBuffer(*mVB, layout);
 
     }
 
     ~ShapeCylinder() override {
-        std::cout << "Delete ShapeTriangle" << std::endl;
+        std::cout << "Delete ShapeCylinder" << std::endl;
     }
 
     void Draw(double delta) override {

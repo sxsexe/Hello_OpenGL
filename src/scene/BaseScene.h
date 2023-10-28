@@ -12,7 +12,7 @@
 class BaseScene {
 
 public:
-    BaseScene(): mShader(nullptr), mCamera(nullptr) {};
+    BaseScene(): mShader(nullptr), mCamera(new Camera()) {};
     virtual ~BaseScene() {
         DELETE_PTR(mShader);
         DELETE_PTR(mCamera);
@@ -25,6 +25,8 @@ public:
     virtual void OnExit() { InUse = false; };
     inline bool CanDraw() const { return InUse; }
 
+    virtual void DrawGUI() {}
+
     virtual void OnScroll(double xOffset, double yOffset) {
         std::cout << "OnScroll xOffset="<<xOffset<< ", yOffset=" << yOffset<< std::endl;
         if(yOffset > 0) {
@@ -35,7 +37,7 @@ public:
     }
 
     virtual void OnKey(MouseDragDirection directionX, MouseDragDirection directionY) {
-        auto angle = 5.0f;
+        auto angle = 10.0f;
         if(directionX == MouseDragDirection::DIR_LEFT) {
             mModel =  glm::rotate(mModel, glm::radians(angle), glm::vec3(0.0, 1.0, 0.0));
             if(directionY == DIR_UP) {

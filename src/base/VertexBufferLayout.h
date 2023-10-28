@@ -41,6 +41,13 @@ public:
 
     inline int getStride() const { return mStride; }
 
+    static void makeDefaultLayout(VertexBufferLayout& layout){
+        layout.push<float>(Vertex::getPosSize());
+        layout.push<float>(Vertex::getColorSize());
+        layout.push<float>(Vertex::getTextCordSize());
+        layout.push<float>(Vertex::getNormalSize());
+    }
+
 private:
     int mStride;
     std::vector<VertexBufferElement> mElements;

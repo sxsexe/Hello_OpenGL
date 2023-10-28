@@ -13,13 +13,18 @@
 #include "VertexArray.h"
 #include "Color.h"
 
+enum ShapeType {
+    S_NONE = 0, S_Triangle = 1, S_Cylinder = 2, S_Ring = 3
+};
+
 class BaseShape {
 
 public:
 
-    BaseShape(): mVA(nullptr), mVB(nullptr), mIB(nullptr), mVertexData(nullptr), mIndexData(nullptr), indexCount(0) {
-
+    BaseShape() : mVA(nullptr), mVB(nullptr), mIB(nullptr), mVertexData(nullptr), mIndexData(nullptr), indexCount(0),
+                  mType(S_NONE) {
     };
+
     virtual ~BaseShape() {
         DELETE_PTR(mIB);
         DELETE_PTR(mVA);
@@ -30,18 +35,21 @@ public:
 
     virtual void Draw(double delta) = 0;
 
+    inline ShapeType getType() { return mType; }
+
 protected:
 
     std::vector<Vertex> mVertexVector;
     std::vector<GLuint> mIndexVector;
-    float* mVertexData;
-    GLuint* mIndexData;
+    float *mVertexData;
+    GLuint *mIndexData;
     uint32_t indexCount = 0;
 
     VertexArray *mVA;
     VertexBuffer *mVB;
     IndexBuffer *mIB;
 
+    ShapeType mType;
 };
 
 

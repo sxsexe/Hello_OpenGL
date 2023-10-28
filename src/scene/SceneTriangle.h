@@ -20,8 +20,6 @@ public:
         std::cout << "Create SceneTriangle"<< std::endl;
 
         mShader = new ShaderProxy("E:\\OpenGLWorld\\Projects\\OpenGLStudy\\glsl\\baseshape.vert", "E:\\OpenGLWorld\\Projects\\OpenGLStudy\\glsl\\baseshape.frag");
-        mCamera = new Camera();
-
         mShape = new ShapeTriangle();
 
     }
