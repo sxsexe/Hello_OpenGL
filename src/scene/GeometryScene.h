@@ -7,7 +7,8 @@
 
 #include "BaseScene.h"
 #include "src/shapes/ShapeCylinder.h"
-#include "../shapes/ShapeRing.h"
+#include "../shapes/ShapeTorus.h"
+#include "../shapes/ShapeCircle.h"
 
 class GeometryScene : public BaseScene {
 
@@ -58,8 +59,11 @@ public:
             if(sCurrentType == S_Cylinder) {
                 mShape = new ShapeCylinder();
             }
-            if(sCurrentType == S_Ring) {
-                mShape = new ShapeRing();
+            if(sCurrentType == S_Torus) {
+                mShape = new ShapeTorus();
+            }
+            if(sCurrentType == S_Circle) {
+                mShape = new ShapeCircle();
             }
         } else {
             if(mShape->getType() != S_Triangle && sCurrentType == S_Triangle) {
@@ -70,9 +74,13 @@ public:
                 DELETE_PTR(mShape);
                 mShape = new ShapeCylinder();
             }
-            if(mShape->getType() != S_Ring && sCurrentType == S_Ring) {
+            if(mShape->getType() != S_Torus && sCurrentType == S_Torus) {
                 DELETE_PTR(mShape);
-                mShape = new ShapeRing();
+                mShape = new ShapeTorus();
+            }
+            if(mShape->getType() != S_Circle && sCurrentType == S_Circle) {
+                DELETE_PTR(mShape);
+                mShape = new ShapeCircle();
             }
         }
 
@@ -85,10 +93,10 @@ public:
     void DrawGUI() override {
         ImGui::Begin("OpenGL SubEntries");
 
-
         ImGui::RadioButton("Cylinders", &sCurrentType, S_Cylinder);
         ImGui::RadioButton("Triangles", &sCurrentType, S_Triangle);
-        ImGui::RadioButton("Ring", &sCurrentType, S_Ring);
+        ImGui::RadioButton("Torus", &sCurrentType, S_Torus);
+        ImGui::RadioButton("Circle", &sCurrentType, S_Circle);
 
         ImGui::End();
     }

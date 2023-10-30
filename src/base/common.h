@@ -67,6 +67,8 @@ struct Vertex {
     glm::vec2 TexCord;                      // 纹理坐标
     glm::vec3 Normal = {0.0f, 0.0f, 0.0f};  // 法向量
 
+    explicit Vertex(glm::vec3 pos) : Pos({pos, 1.0f}), Color({1.0, 0.0, 0.0, 1.0}), TexCord(0.0, 0.0){ }
+    explicit Vertex(glm::vec4 pos) : Pos(pos), Color({1.0, 0.0, 0.0, 1.0}), TexCord(0.0, 0.0){ }
     Vertex(glm::vec4 pos, glm::vec4 color) : Pos(pos), Color(color), TexCord(0.0, 0.0){ }
 
     static uint32_t getPosSize() {return sizeof(Pos) / sizeof(float); }
