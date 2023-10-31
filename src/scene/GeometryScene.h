@@ -8,7 +8,7 @@
 #include "BaseScene.h"
 #include "src/shapes/ShapeCylinder.h"
 #include "../shapes/ShapeTorus.h"
-#include "../shapes/ShapeCircle.h"
+#include "../shapes/ShapeCarbonBall.h"
 
 class GeometryScene : public BaseScene {
 
@@ -42,16 +42,46 @@ public:
         GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
         GLCall(glEnable(GL_DEPTH_TEST));
 
-        mShader->Bind();
-        mMVP = mProj * mCamera->getCameraViewMatrix() * mModel;
-        mShader->setUniformMat4f("u_MVP", mMVP);
 
-        double time = glfwGetTime();
-        mShader->setUniform1i("usingTime", 1);
-        mShader->setUniform1f("time", time);
-        mShader->setUniform1f("windowWidth", WINDOW_WIDTH);
-        mShader->setUniform1f("windowHeight", WINDOW_HEIGHT);
 
+        CreateShapeByType();
+        if(mShape) {
+
+            mMVP = mProj * mCamera->getCameraViewMatrix() * mModel;
+            if(mShape->getShader()) {
+                // use specified shader
+                mShape->SetupShader(mMVP);
+            } else {
+                mShader->Bind();
+                mShader->setUniformMat4f("u_MVP", mMVP);
+
+                double time = glfwGetTime();
+                mShader->setUniform1i("usingTime", 1);
+                mShader->setUniform1f("time", time);
+                mShader->setUniform1f("windowWidth", WINDOW_WIDTH);
+                mShader->setUniform1f("windowHeight", WINDOW_HEIGHT);
+            }
+            mShape->Draw(delta);
+        }
+
+        DrawGUI();
+    }
+
+    void DrawGUI() override {
+        ImGui::Begin("OpenGL SubEntries");
+
+        ImGui::RadioButton("Cylinders", &sCurrentType, S_Cylinder);
+        ImGui::RadioButton("Triangles", &sCurrentType, S_Triangle);
+        ImGui::RadioButton("Torus", &sCurrentType, S_Torus);
+        ImGui::RadioButton("CarbonBall", &sCurrentType, S_CarbonBall);
+
+        ImGui::End();
+    }
+
+private:
+    BaseShape* mShape;
+
+    void CreateShapeByType() {
         if(mShape == nullptr) {
             if(sCurrentType == S_Triangle) {
                 mShape = new ShapeTriangle();
@@ -62,9 +92,10 @@ public:
             if(sCurrentType == S_Torus) {
                 mShape = new ShapeTorus();
             }
-            if(sCurrentType == S_Circle) {
-                mShape = new ShapeCircle();
+            if(sCurrentType == S_CarbonBall) {
+                mShape = new ShapeCarbonBall();
             }
+
         } else {
             if(mShape->getType() != S_Triangle && sCurrentType == S_Triangle) {
                 DELETE_PTR(mShape);
@@ -78,31 +109,13 @@ public:
                 DELETE_PTR(mShape);
                 mShape = new ShapeTorus();
             }
-            if(mShape->getType() != S_Circle && sCurrentType == S_Circle) {
+
+            if(mShape->getType() != S_CarbonBall && sCurrentType == S_CarbonBall) {
                 DELETE_PTR(mShape);
-                mShape = new ShapeCircle();
+                mShape = new ShapeCarbonBall();
             }
         }
-
-        if(mShape)
-            mShape->Draw(delta);
-
-        DrawGUI();
     }
-
-    void DrawGUI() override {
-        ImGui::Begin("OpenGL SubEntries");
-
-        ImGui::RadioButton("Cylinders", &sCurrentType, S_Cylinder);
-        ImGui::RadioButton("Triangles", &sCurrentType, S_Triangle);
-        ImGui::RadioButton("Torus", &sCurrentType, S_Torus);
-        ImGui::RadioButton("Circle", &sCurrentType, S_Circle);
-
-        ImGui::End();
-    }
-
-private:
-    BaseShape* mShape;
 
 public:
     static int sCurrentType;

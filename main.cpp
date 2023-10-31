@@ -24,11 +24,6 @@ void changeScene(BaseScene* newScene) {
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
     if(mCurrentScene && mCurrentScene->CanDraw()) {
         mCurrentScene->OnScroll(xoffset, yoffset);
-        if(yoffset > 0) {
-
-        } else if(yoffset < 0) {
-
-        }
     }
 }
 

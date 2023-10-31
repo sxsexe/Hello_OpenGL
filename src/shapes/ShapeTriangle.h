@@ -47,25 +47,25 @@ public:
         mIndexData[i++] = 1;
         mIndexData[i++] = 2;
 
-        mVB = new VertexBuffer(nullptr, mVertexVector.size() * sizeof(Vertex), true);
-        mIB = new IndexBuffer(mIndexData, indexCount);
+        mVBO = new VertexBuffer(nullptr, mVertexVector.size() * sizeof(Vertex), true);
+        mEBO = new ElementArrayBuffer(mIndexData, indexCount);
 
-        mVA = new VertexArray();
-        mVA->Bind();
+        mVAO = new VertexArray();
+        mVAO->Bind();
         VertexBufferLayout layout;
         VertexBufferLayout::makeDefaultLayout(layout);
-        mVA->AddVertexBuffer(*mVB, layout);
+        mVAO->AddVertexBuffer(*mVBO, layout);
 
         memcpy(mVertexData, &mVertexVector[0], mVertexVector.size() * sizeof(Vertex));
     }
 
     void Draw(double delta) override {
-        mVA->Bind();
-        mIB->Bind();
-        mVB->Bind();
-        mVB->UpdateSubData(mVertexData, mVertexVector.size() * sizeof(Vertex));
+        mVAO->Bind();
+        mEBO->Bind();
+        mVBO->Bind();
+        mVBO->UpdateSubData(mVertexData, mVertexVector.size() * sizeof(Vertex));
 
-        GLCall(glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr));
+        Renderer::DrawTrianglesEBO(indexCount, GL_UNSIGNED_INT, nullptr);
     }
 
     ~ShapeTriangle() override {

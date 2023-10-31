@@ -10,10 +10,10 @@
 class VertexBuffer {
 
 public:
-    VertexBuffer(const void *data, unsigned int size, bool dynamic = false) : mBufferID(0) {
-        GLCall(glGenBuffers(1, &mBufferID));
-        std::cout << "Create VertexBuffer mBufferID = " << mBufferID << std::endl;
-        GLCall(glBindBuffer(GL_ARRAY_BUFFER, mBufferID));
+    VertexBuffer(const void *data, unsigned int size, bool dynamic = false) : mVBO(0) {
+        GLCall(glGenBuffers(1, &mVBO));
+        std::cout << "Create VertexBuffer mVBO = " << mVBO << std::endl;
+        GLCall(glBindBuffer(GL_ARRAY_BUFFER, mVBO));
         GLCall(glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW));
     }
     VertexBuffer(const VertexBuffer& rhs) = delete;
@@ -21,12 +21,12 @@ public:
 
     ~VertexBuffer() {
         Unbind();
-        GLCall(glDeleteBuffers(1, &mBufferID));
-        std::cout << "Delete VertexBuffer mBufferID = " << mBufferID << std::endl;
+        GLCall(glDeleteBuffers(1, &mVBO));
+        std::cout << "Delete VertexBuffer mVBO = " << mVBO << std::endl;
     }
 
     void Bind() const {
-        GLCall(glBindBuffer(GL_ARRAY_BUFFER, mBufferID));
+        GLCall(glBindBuffer(GL_ARRAY_BUFFER, mVBO));
     }
 
     void Unbind() const {
@@ -40,7 +40,7 @@ public:
 
 private:
 
-    uint32_t mBufferID;
+    uint32_t mVBO;
 
 };
 

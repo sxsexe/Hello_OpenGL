@@ -28,7 +28,7 @@ public:
     virtual void DrawGUI() {}
 
     virtual void OnScroll(double xOffset, double yOffset) {
-        std::cout << "OnScroll xOffset="<<xOffset<< ", yOffset=" << yOffset<< std::endl;
+//        std::cout << "OnScroll xOffset="<<xOffset<< ", yOffset=" << yOffset<< std::endl;
         if(yOffset > 0) {
             mCamera->ZoomIn();
         } else if(yOffset < 0) {

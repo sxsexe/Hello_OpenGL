@@ -67,18 +67,18 @@ public:
         indexCount = mIndexVector.size();
         mIndexData = new GLuint[indexCount * sizeof(GLuint)];
         memcpy(mIndexData, &mIndexVector[0], indexCount * sizeof(GLuint));
-        mIB = new IndexBuffer(mIndexData, indexCount);
+        mEBO = new ElementArrayBuffer(mIndexData, indexCount);
 
         mVertexData = new float[mVertexVector.size() * sizeof(Vertex)];
         memcpy(mVertexData, &mVertexVector[0], mVertexVector.size() * sizeof(Vertex));
         // dynamic update data
-        mVB = new VertexBuffer(nullptr, mVertexVector.size() * sizeof(Vertex), true);
+        mVBO = new VertexBuffer(nullptr, mVertexVector.size() * sizeof(Vertex), true);
 
-        mVA = new VertexArray();
-        mVA->Bind();
+        mVAO = new VertexArray();
+        mVAO->Bind();
         VertexBufferLayout layout;
         VertexBufferLayout::makeDefaultLayout(layout);
-        mVA->AddVertexBuffer(*mVB, layout);
+        mVAO->AddVertexBuffer(*mVBO, layout);
     }
 
     ~ShapeTorus() override {
@@ -87,12 +87,12 @@ public:
 
 
     void Draw(double delta) override {
-        mVA->Bind();
-        mIB->Bind();
-        mVB->Bind();
-        mVB->UpdateSubData(mVertexData, mVertexVector.size() * sizeof(Vertex));
+        mVAO->Bind();
+        mEBO->Bind();
+        mVBO->Bind();
+        mVBO->UpdateSubData(mVertexData, mVertexVector.size() * sizeof(Vertex));
 
-        GLCall(glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr));
+        Renderer::DrawTrianglesEBO(indexCount, GL_UNSIGNED_INT, nullptr);
     }
 
 

@@ -8,27 +8,30 @@
 #include <iostream>
 #include <vector>
 #include "common.h"
-#include "IndexBuffer.h"
+#include "ElementArrayBuffer.h"
 #include "VertexBuffer.h"
 #include "VertexArray.h"
 #include "Color.h"
+#include "Renderer.h"
+#include "ShaderProxy.h"
 
 enum ShapeType {
-    S_NONE = 0, S_Triangle = 1, S_Cylinder = 2, S_Torus = 3, S_Circle = 4
+    S_NONE = 0, S_Triangle = 1, S_Cylinder = 2, S_Torus = 3, S_CarbonBall = 4
 };
 
 class BaseShape {
 
 public:
 
-    BaseShape() : mVA(nullptr), mVB(nullptr), mIB(nullptr), mVertexData(nullptr), mIndexData(nullptr), indexCount(0),
-                  mType(S_NONE) {
+    BaseShape() : mVAO(nullptr), mVBO(nullptr), mEBO(nullptr), mVertexData(nullptr), mIndexData(nullptr), indexCount(0),
+                  mType(S_NONE), mShaderProxy(nullptr) {
     };
 
     virtual ~BaseShape() {
-        DELETE_PTR(mIB);
-        DELETE_PTR(mVA);
-        DELETE_PTR(mVB);
+        DELETE_PTR(mShaderProxy);
+        DELETE_PTR(mEBO);
+        DELETE_PTR(mVAO);
+        DELETE_PTR(mVBO);
         DELETE_ARRAY_PTR(mIndexData);
         DELETE_ARRAY_PTR(mVertexData);
     };
@@ -36,6 +39,12 @@ public:
     virtual void Draw(double delta) = 0;
 
     inline ShapeType getType() { return mType; }
+
+    inline ShaderProxy* getShader() {
+        return mShaderProxy;
+    }
+
+    virtual void SetupShader(glm::mat4 mvp) {}
 
 protected:
 
@@ -45,11 +54,13 @@ protected:
     GLuint *mIndexData;
     uint32_t indexCount = 0;
 
-    VertexArray *mVA;
-    VertexBuffer *mVB;
-    IndexBuffer *mIB;
+    VertexArray *mVAO;
+    VertexBuffer *mVBO;
+    ElementArrayBuffer *mEBO;
 
     ShapeType mType;
+
+    ShaderProxy *mShaderProxy;
 };
 
 
