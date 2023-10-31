@@ -2,18 +2,18 @@
 // Created by xiaodong.lxd on 2023/10/31.
 //
 
-#ifndef OPENGLSTUDY_SHAPECARBONBALL_H
-#define OPENGLSTUDY_SHAPECARBONBALL_H
+#ifndef OPENGLSTUDY_SHAPEPOINTS_H
+#define OPENGLSTUDY_SHAPEPOINTS_H
 
 #include "BaseShape.h"
 
-class ShapeCarbonBall : public BaseShape {
+class ShapePoints : public BaseShape {
 
 public:
-    ShapeCarbonBall() {
-        std::cout << "Create ShapeCarbonBall" << std::endl;
+    ShapePoints() {
+        std::cout << "Create ShapePoints" << std::endl;
 
-        mType = S_CarbonBall;
+        mType = S_Points;
 
         float size = 0.8f;
         mVertexVector.push_back({glm::vec4(-size, -size, +size, 1.0f), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)}); // left bottom
@@ -39,8 +39,8 @@ public:
     }
 
 
-    ~ShapeCarbonBall() override {
-        std::cout << "Delete ShapeCarbonBall" << std::endl;
+    ~ShapePoints() override {
+        std::cout << "Delete ShapePoints" << std::endl;
     }
 
     void Draw(double delta) override {
@@ -59,4 +59,4 @@ public:
 
 };
 
-#endif //OPENGLSTUDY_SHAPECARBONBALL_H
+#endif //OPENGLSTUDY_SHAPEPOINTS_H

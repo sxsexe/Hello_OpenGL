@@ -8,7 +8,7 @@
 #include "BaseScene.h"
 #include "src/shapes/ShapeCylinder.h"
 #include "../shapes/ShapeTorus.h"
-#include "../shapes/ShapeCarbonBall.h"
+#include "../shapes/ShapePoints.h"
 
 class GeometryScene : public BaseScene {
 
@@ -73,7 +73,7 @@ public:
         ImGui::RadioButton("Cylinders", &sCurrentType, S_Cylinder);
         ImGui::RadioButton("Triangles", &sCurrentType, S_Triangle);
         ImGui::RadioButton("Torus", &sCurrentType, S_Torus);
-        ImGui::RadioButton("CarbonBall", &sCurrentType, S_CarbonBall);
+        ImGui::RadioButton("CarbonBall", &sCurrentType, S_Points);
 
         ImGui::End();
     }
@@ -92,8 +92,8 @@ private:
             if(sCurrentType == S_Torus) {
                 mShape = new ShapeTorus();
             }
-            if(sCurrentType == S_CarbonBall) {
-                mShape = new ShapeCarbonBall();
+            if(sCurrentType == S_Points) {
+                mShape = new ShapePoints();
             }
 
         } else {
@@ -110,9 +110,9 @@ private:
                 mShape = new ShapeTorus();
             }
 
-            if(mShape->getType() != S_CarbonBall && sCurrentType == S_CarbonBall) {
+            if(mShape->getType() != S_Points && sCurrentType == S_Points) {
                 DELETE_PTR(mShape);
-                mShape = new ShapeCarbonBall();
+                mShape = new ShapePoints();
             }
         }
     }

@@ -16,7 +16,7 @@
 #include "ShaderProxy.h"
 
 enum ShapeType {
-    S_NONE = 0, S_Triangle = 1, S_Cylinder = 2, S_Torus = 3, S_CarbonBall = 4
+    S_NONE = 0, S_Triangle = 1, S_Cylinder = 2, S_Torus = 3, S_Points = 4
 };
 
 class BaseShape {
